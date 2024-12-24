@@ -1,5 +1,7 @@
 package com.plcoding.cryptotracker.core.domain.util
 
+import com.plcoding.cryptotracker.crypto.data.Networking.dto.CoinsResponseDto
+
 typealias DomainError = Error
 
 sealed interface Result<out D, out E: Error> {
@@ -7,7 +9,7 @@ sealed interface Result<out D, out E: Error> {
     data class Error<out E: DomainError>(val error: E): Result<Nothing, E>
 }
 
-inline fun <T, E: Error, R> Result<T, E>.map(map: (T) -> R): Result<R, E> {
+inline fun <T, E: Error, R> Result<T, E>.map(map: (CoinsResponseDto) -> Unit): Result<R, E> {
     return when(this) {
         is Result.Error -> Result.Error(error)
         is Result.Success -> Result.Success(map(data))
