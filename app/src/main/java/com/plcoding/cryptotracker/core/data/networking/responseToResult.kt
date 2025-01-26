@@ -5,6 +5,8 @@ import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.call.body
 
+
+
 suspend inline fun <reified T> responseToResult (
     response: HttpResponse
 ): Result <T, NetworkError> {

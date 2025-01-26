@@ -29,6 +29,7 @@ import com.plcoding.cryptotracker.crypto.presentation.models.CoinUI
 import com.plcoding.cryptotracker.crypto.presentation.models.toCoinUI
 import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
 
+//UI of coin list screen
 @Composable
 fun CoinListItem(
     coinUI: CoinUI,
