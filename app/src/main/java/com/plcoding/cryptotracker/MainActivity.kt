@@ -1,6 +1,7 @@
 package com.plcoding.cryptotracker
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.plcoding.cryptotracker.core.presentation.util.ObserveAsEvents
+import com.plcoding.cryptotracker.core.presentation.util.toString
+import com.plcoding.cryptotracker.crypto.presentation.coin_detail.CoinDetailScreen
+import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListEvent
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListViewModel
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.components.CoinListScreen
 import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
@@ -27,29 +33,35 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val viewModel = koinViewModel<CoinListViewModel>()
                     val state by viewModel.state.collectAsStateWithLifecycle()
-                    CoinListScreen(
-                        state = state,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    val context = LocalContext.current
+                    ObserveAsEvents(events = viewModel.event) { event ->
+                        when(event) {
+                            is CoinListEvent.Error -> {
+                                Toast.makeText(
+                                    context,
+                                    event.error.toString(context),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
+                    when{
+                        state.selectedCoin != null -> {
+                            CoinDetailScreen(
+                                state = state,
+                                modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+                       else -> {
+                           CoinListScreen(
+                               state = state,
+                               modifier = Modifier.padding(innerPadding),
+                               onAction = viewModel::onAction
+                           )
+                       }
+                    }
                 }
             }
         }
     }
 }
-
-/*
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CryptoTrackerTheme {
-        Greeting("Android")
-    }
-}*/

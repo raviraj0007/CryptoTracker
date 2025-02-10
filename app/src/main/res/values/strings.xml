@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">CryptoTracker</string>
+    <string name="error_request_timeout">The request timed out.</string>
+    <string name="error_too_many_requests">Oops, it seems like your quoto is exceeed</string>
+    <string name="error_no_internet">Couldn\'t connect to server. Please check your Internet</string>
+    <string name="error_unknown">Something went wrong. please try again</string>
+    <string name="error_serialization">Couldn\'t serialize or deserialize data</string>
+    <string name="market_cap">market cap\n</string>
+    <string name="price">price\n</string>
+    <string name="change_last_24h">change last 24h</string>
 </resources>
