@@ -1,7 +1,5 @@
 package com.plcoding.cryptotracker.core.domain.util
 
-import com.plcoding.cryptotracker.crypto.data.Networking.dto.CoinsResponseDto
-
 typealias DomainError = Error
 
 sealed interface Result<out D, out E: Error> {
