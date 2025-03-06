@@ -1,6 +1,6 @@
 package com.plcoding.cryptotracker.crypto.data.Networking.dto
 
-import com.plcoding.cryptotracker.crypto.data.networking.dto.CoinPriceDto
+import com.plcoding.cryptotracker.crypto.data.Networking.dto.CoinPriceDto
 import kotlinx.serialization.Serializable
 
 

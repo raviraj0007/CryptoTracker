@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     val viewModel = koinViewModel<CoinListViewModel>()
                     val state by viewModel.state.collectAsStateWithLifecycle()
                     val context = LocalContext.current
-                    ObserveAsEvents(events = viewModel.event) { event ->
+                    ObserveAsEvents(events = viewModel.events) { event ->
                         when(event) {
                             is CoinListEvent.Error -> {
                                 Toast.makeText(

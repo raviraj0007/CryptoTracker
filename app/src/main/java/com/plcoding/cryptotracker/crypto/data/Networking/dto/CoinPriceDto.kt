@@ -1,4 +1,4 @@
-package com.plcoding.cryptotracker.crypto.data.networking.dto
+package com.plcoding.cryptotracker.crypto.data.Networking.dto
 
 import kotlinx.serialization.Serializable
 

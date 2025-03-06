@@ -8,7 +8,7 @@ import com.plcoding.cryptotracker.core.domain.util.map
 import com.plcoding.cryptotracker.crypto.data.Networking.dto.CoinHistoryDto
 import com.plcoding.cryptotracker.crypto.data.mappers.toCoin
 import com.plcoding.cryptotracker.crypto.data.mappers.toCoinPrice
-import com.plcoding.cryptotracker.crypto.data.networking.dto.CoinsResponseDto
+import com.plcoding.cryptotracker.crypto.data.Networking.dto.CoinsResponseDto
 import com.plcoding.cryptotracker.crypto.domain.Coin
 import com.plcoding.cryptotracker.crypto.domain.CoinDataSource
 import com.plcoding.cryptotracker.crypto.domain.CoinPrice
