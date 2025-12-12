@@ -3,6 +3,7 @@ package com.plcoding.cryptotracker
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler // ✅ Add this import
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,17 +19,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plcoding.cryptotracker.core.presentation.util.ObserveAsEvents
 import com.plcoding.cryptotracker.core.presentation.util.toString
 import com.plcoding.cryptotracker.crypto.presentation.coin_detail.CoinDetailScreen
+import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListAction // ✅ Add this import
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListEvent
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListViewModel
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.components.CoinListScreen
 import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
-import org.koin.androidx.compose.koinViewModel;
-
-/* Summary
-Loads with a coin list screen.
-If a coin is picked, shows the coin's detail screen.
-Handles errors by showing a message ("toast").
-*/
+import org.koin.androidx.compose.koinViewModel
+import androidx.activity.compose.BackHandler
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +34,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             CryptoTrackerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val viewModel = koinViewModel<CoinListViewModel>() // Inject the ViewModel
-                    val state by viewModel.state.collectAsStateWithLifecycle() // Observe the state
-                    val context = LocalContext.current // Get the context
-                    ObserveAsEvents(events = viewModel.events) { event -> // Observe events
+                    val viewModel = koinViewModel<CoinListViewModel>()
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    val context = LocalContext.current
+
+                    ObserveAsEvents(events = viewModel.events) { event ->
                         when(event) {
-                            is CoinListEvent.Error -> { // Handle the error event
+                            is CoinListEvent.Error -> {
                                 Toast.makeText(
                                     context,
                                     event.error.toString(context),
@@ -51,20 +49,25 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    when{ // Render the appropriate screen based on the current state
+
+                    when {
                         state.selectedCoin != null -> {
-                            CoinDetailScreen( // Call the coin detail screen with parameters
+                            // ✅ Handle back button specifically for detail screen
+                            BackHandler {
+                                viewModel.onAction(CoinListAction.OnBackClick)
+                            }
+                            CoinDetailScreen(
                                 state = state,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
-                       else -> { // Render the coin list screen
-                           CoinListScreen( // Call the coin list screen with parameters
-                               state = state,
-                               modifier = Modifier.padding(innerPadding),
-                               onAction = viewModel::onAction // Pass the action handler
-                           )
-                       }
+                        else -> {
+                            CoinListScreen(
+                                state = state,
+                                modifier = Modifier.padding(innerPadding),
+                                onAction = viewModel::onAction
+                            )
+                        }
                     }
                 }
             }

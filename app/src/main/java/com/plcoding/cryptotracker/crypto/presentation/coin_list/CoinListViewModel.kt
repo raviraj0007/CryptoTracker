@@ -1,3 +1,4 @@
+
 package com.plcoding.cryptotracker.crypto.presentation.coin_list
 
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,6 @@ import com.plcoding.cryptotracker.crypto.presentation.models.toCoinUI
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -26,7 +26,6 @@ class CoinListViewModel(
 
     private val _state = MutableStateFlow(CoinListState())
     val state = _state
-        .onStart { loadCoins() }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
@@ -36,10 +35,18 @@ class CoinListViewModel(
     private val _event = Channel<CoinListEvent>()
     val events = _event.receiveAsFlow()
 
+    // ✅ FIX: Force loadCoins to run immediately on creation
+    init {
+        loadCoins()
+    }
+
     fun onAction(action: CoinListAction) {
         when(action) {
             is CoinListAction.OnCoinClick -> {
                 selectCoin(action.coinUI)
+            }
+            CoinListAction.OnBackClick -> {
+                _state.update { it.copy(selectedCoin = null) }
             }
         }
     }
@@ -117,7 +124,6 @@ class CoinListViewModel(
                 println("❌ ViewModel: Exception caught - ${e.message}")
                 e.printStackTrace()
                 _state.update { it.copy(isLoading = false) }
-                // Optionally send error event
             }
         }
     }
